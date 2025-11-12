@@ -1,0 +1,43 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  vercel-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Validate secrets
+        run: |
+          if [ -z "$VERCEL_TOKEN" ]; then echo "Missing VERCEL_TOKEN secret. Set it in repository Settings → Secrets."; exit 1; fi
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel (prod)
+        env:
+          VERCEL_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+          # Optional: set these if you want to pin the organization/project
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+        run: |
+          # Use the Vercel CLI to deploy the current repository to the linked Vercel project.
+          # --prod performs a production deployment; --confirm avoids interactive prompts.
+          vercel --prod --confirm
+
+# Notes:
+# - Before this workflow will run successfully you MUST add a repository secret named VERCEL_TOKEN
+#   (create a token at https://vercel.com/account and add it in Settings → Secrets).
+# - You can optionally add VERCEL_ORG_ID and VERCEL_PROJECT_ID as secrets to ensure the correct project
+#   is targeted when multiple Vercel projects are linked to the repo.
