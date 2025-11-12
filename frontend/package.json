@@ -12,6 +12,9 @@
     "start": "react-scripts start",
     "build": "node ./node_modules/react-scripts/scripts/build.js"
   },
+  "engines": {
+    "node": "18.x"
+  },
   "proxy": "http://localhost:8080",
   "browserslist": {
     "production": [
