@@ -1,0 +1,3 @@
+﻿#!/usr/bin/env bash
+MAVEN_WRAPPER_DIR="$(dirname "$0")/.mvn/wrapper"
+java -jar "$MAVEN_WRAPPER_DIR/maven-wrapper.jar" "$@"
