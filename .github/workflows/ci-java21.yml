@@ -28,8 +28,51 @@ jobs:
           java-version: '21'
           cache: 'maven'
 
-      - name: Build (skip tests for speed)
-        run: mvn -B -DskipTests package
+      - name: Build (run tests)
+        run: mvn -B package
 
-      - name: Run tests
-        run: mvn test
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install and build frontend
+        working-directory: ./frontend
+        run: |
+          npm ci
+          npm run build
+
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-build
+          path: frontend/build
+
+  docker-build:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: ghcr.io/${{ github.repository }}:backend-latest
+
+      - name: Build and push frontend image (nginx)
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./docker-compose.yml
+          push: false
