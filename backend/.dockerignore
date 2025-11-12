@@ -1,0 +1,8 @@
+target/
+.mvn/
+.git/
+**/node_modules
+**/build
+*.log
+.idea/
+*.iml
