@@ -1,26 +1,134 @@
-/* Minimal reset and styles used by the app */
-html,body,#root { height: 100%; margin: 0; font-family: Arial, Helvetica, sans-serif; }
-body { background: #f3f4f6; }
+﻿/* Global design tokens and layout for the app (modern dark header + hero + form + cards) */
 
-/* Simple utility classes used in components (when Tailwind is not configured) */
-.flex { display:flex; }
-.items-center { align-items:center; }
-.justify-center { justify-content:center; }
-.h-screen { height: 100vh; }
-.bg-gray-100 { background: #f3f4f6; }
-.text-4xl { font-size: 2.25rem; }
-.font-bold { font-weight: 700; }
-.mb-6 { margin-bottom: 1.5rem; }
-.text-gray-600 { color: #4b5563; }
-.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
-.py-3 { padding-top: .75rem; padding-bottom: .75rem; }
-.bg-blue-600 { background: #2563eb; }
-.text-white { color: #fff; }
-.rounded-xl { border-radius: .75rem; }
-.mt-4 { margin-top: 1rem; }
-.mb-4 { margin-bottom: 1rem; }
-.mt-6 { margin-top: 1.5rem; }
-.mb-6 { margin-bottom: 1.5rem; }
-.bg-white { background: #fff; }
-.rounded-lg { border-radius: .5rem; }
-.shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+:root{
+  --bg-dark: #121214; /* optional page background in dark mode */
+  --header-bg: #1D1E22;
+  --text-on-dark: #FFFFFF;
+  --muted: #A0A0A0;
+  --primary: #00B38A;
+  --primary-hover: #00966E;
+  --secondary: #4B6CB7;
+  --input-bg: #2E2F33;
+  --input-placeholder: #7C7D82;
+  --card-bg-light: #FFFFFF;
+  --card-bg-dark: #2E2F33;
+  --card-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  --page-max-width: 1200px;
+  --radius-card: 8px;
+}
+
+/* Base reset */
+*{box-sizing:border-box}
+html,body,#root{height:100%;margin:0;font-family:Inter,Segoe UI,Helvetica,Arial,sans-serif;background:#0f1720;color:#111827}
+body{background:linear-gradient(180deg,#0b1020 0%, #07101a 100%);}
+
+/* Header / Nav */
+.site-header{background:var(--header-bg);color:var(--text-on-dark);padding:12px 0;box-shadow: 0 1px 0 rgba(255,255,255,0.02)}
+.container{max-width:var(--page-max-width);margin:0 auto;padding:0 16px}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.nav .brand{font-weight:700;font-size:1.125rem;color:var(--text-on-dark)}
+.nav .nav-actions{display:flex;gap:12px;align-items:center}
+.btn-ghost{background:transparent;border:none;color:var(--text-on-dark);cursor:pointer;padding:8px 12px;border-radius:6px}
+.theme-toggle{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:6px 10px;border-radius:6px;color:var(--text-on-dark)}
+
+/* Hero */
+.hero{display:flex;align-items:center;gap:32px;padding:56px 0}
+.hero-inner{display:flex;flex-direction:column;gap:20px;flex:1}
+.hero-visual{flex:1}
+.hero-cta{background:linear-gradient(135deg,var(--secondary),#182848);padding:48px;border-radius:12px;color:var(--text-on-dark)}
+.hero h1{font-size:2.5rem;margin:0;color:var(--text-on-dark);font-weight:800;line-height:1.05}
+.hero p.lead{color:var(--muted);font-size:1.05rem;margin:0}
+
+/* Form (URL shortener style) */
+.shorten-form{display:flex;gap:12px;align-items:center}
+.shorten-form .input{
+  background:var(--input-bg);border:none;color:var(--text-on-dark);padding:12px 16px;border-radius:6px;flex:1;outline:none;font-size:1rem;
+}
+.shorten-form .input::placeholder{color:var(--input-placeholder)}
+.shorten-form .btn-primary{
+  background:var(--primary);color:#fff;border:none;border-radius:6px;padding:12px 24px;cursor:pointer;transition:background .2s ease,transform .08s ease;font-weight:600
+}
+.shorten-form .btn-primary:hover{background:var(--primary-hover)}
+
+/* Cards / Results */
+.card{background:var(--card-bg-light);border-radius:var(--radius-card);box-shadow:var(--card-shadow);padding:16px;transition:transform .2s ease,box-shadow .2s ease}
+.card.dark{background:var(--card-bg-dark);color:var(--text-on-dark)}
+.card:hover{transform:translateY(-4px)}
+.result-row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.copy-btn{background:var(--primary);color:#fff;border:none;padding:8px 14px;border-radius:6px;cursor:pointer;transition:background .18s ease}
+.copy-btn:hover{background:#00966E}
+.copy-btn.copied{background:#007a5d}
+
+/* Layout container for content */
+.main{padding:24px 0}
+.centered{margin-left:auto;margin-right:auto;max-width:var(--page-max-width);padding:0 16px}
+
+/* Typography */
+h2{font-size:2.5rem;font-weight:800;margin:0}
+p{font-size:1rem;line-height:1.5;color:#111827}
+.muted{color:var(--muted)}
+
+/* Responsive */
+@media (max-width: 900px){
+  .hero{flex-direction:column;padding:32px 0}
+  .hero-cta{width:100%;padding:28px}
+  .shorten-form{flex-direction:column;align-items:stretch}
+  .shorten-form .btn-primary{width:100%}
+}
+
+/* Dark mode support (toggle by adding .dark-mode to body) */
+body.dark-mode{background:var(--bg-dark);color:var(--text-on-dark)}
+body.dark-mode .hero-cta{background:linear-gradient(135deg,var(--secondary),#0f2140)}
+body.dark-mode .card{background:var(--card-bg-dark);color:var(--text-on-dark)}
+body.dark-mode p.lead{color:#cfcfcf}
+
+/* Animations & interactions */
+.btn-anim{transition:all .2s ease}
+.smooth-snap{scroll-snap-type:y mandatory}
+
+/* Utility spacing */
+.mb-6{margin-bottom:1.5rem}
+.mt-6{margin-top:1.5rem}
+.gap-4{gap:1rem}
+
+/* Small helper for hero layout on desktop (side-by-side) */
+.hero-grid{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:32px}
+@media (max-width:900px){.hero-grid{grid-template-columns:1fr}}
+
+/* Micro-interaction for copy success */
+.copy-feedback{font-size:0.9rem;color:var(--muted);margin-left:8px}
+
+/* Accessibility focus */
+.input:focus, .btn-primary:focus, .copy-btn:focus{outline:2px solid rgba(0,179,138,0.18);outline-offset:2px}
+
+/* Option visual styles for Quiz answers */
+.option{background:transparent;transition:background .15s ease,transform .08s ease;border:1px solid rgba(255,255,255,0.04)}
+.option input{accent-color:var(--primary);}
+.option:hover{background:rgba(255,255,255,0.02);transform:translateY(-2px)}
+.option.selected{background:linear-gradient(90deg, rgba(0,179,138,0.12), rgba(75,108,183,0.02));border-color:rgba(0,179,138,0.16)}
+
+/* Theme toggle */
+.theme-toggle{display:inline-flex;align-items:center;gap:8px}
+
+/* End of index.css */
+/* Compatibility utility classes (used by existing components) */
+.flex{display:flex}
+.items-center{align-items:center}
+.justify-center{justify-content:center}
+.h-screen{height:100vh}
+.bg-gray-100{background:#f3f4f6}
+.text-4xl{font-size:2.25rem}
+.font-bold{font-weight:700}
+.mb-6{margin-bottom:1.5rem}
+.text-gray-600{color:#4b5563}
+.px-6{padding-left:1.5rem;padding-right:1.5rem}
+.py-3{padding-top:.75rem;padding-bottom:.75rem}
+.bg-blue-600{background:#2563eb}
+.text-white{color:#fff}
+.rounded-xl{border-radius:.75rem}
+.mt-4{margin-top:1rem}
+.mb-4{margin-bottom:1rem}
+.mt-6{margin-top:1.5rem}
+.bg-white{background:var(--card-bg-light)}
+.rounded-lg{border-radius:.5rem}
+.shadow{box-shadow:0 1px 3px rgba(0,0,0,0.08)}

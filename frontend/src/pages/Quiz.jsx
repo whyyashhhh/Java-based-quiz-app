@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Header from '../components/Header';
+import QuestionCard from '../components/QuestionCard';
 
 export default function Quiz() {
   const { category } = useParams();
@@ -14,6 +16,10 @@ export default function Quiz() {
       .catch((err) => console.error(err));
   }, [category]);
 
+  const onSelect = (questionId, optionIndex) => {
+    setAnswers((s) => ({ ...s, [questionId]: optionIndex }));
+  };
+
   const submitQuiz = async () => {
     const payload = Object.entries(answers).map(([question, answer]) => ({ question, answer }));
     const res = await fetch("/api/quiz/submit", {
@@ -26,26 +32,29 @@ export default function Quiz() {
   };
 
   return (
-    <div className="p-8">
-      <h2 className="text-2xl mb-4">Category: {category}</h2>
-      {questions.map((q, i) => (
-        <div key={i} className="mb-6 bg-white p-4 rounded-lg shadow">
-          <p className="font-semibold">{i + 1}. {q.question}</p>
-          {q.options.map((opt) => (
-            <label key={opt} className="block mt-1">
-              <input
-                type="radio"
-                name={q.question}
-                value={opt}
-                onChange={() => setAnswers({ ...answers, [q.question]: opt })}
-              /> {opt}
-            </label>
-          ))}
+    <div>
+      <Header />
+      <main className="main centered">
+        <h2 className="mb-4">Category: {category}</h2>
+
+        {questions.length === 0 && <p className="muted">Loading questions...</p>}
+
+        {questions.map((q, i) => (
+          <QuestionCard
+            key={q.id || i}
+            index={i}
+            question={q}
+            selected={answers[q.question] ?? answers[q.id]}
+            onSelect={(optIdx) => onSelect(q.question ?? q.id, optIdx)}
+          />
+        ))}
+
+        <div style={{marginTop:16}}>
+          <button onClick={submitQuiz} className="btn-primary">
+            Submit Quiz
+          </button>
         </div>
-      ))}
-      <button onClick={submitQuiz} className="mt-4 px-6 py-3 bg-green-500 text-white rounded-lg">
-        Submit Quiz
-      </button>
+      </main>
     </div>
   );
 }
