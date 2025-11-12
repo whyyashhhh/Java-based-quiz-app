@@ -33,8 +33,8 @@ jobs:
           VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
         run: |
           # Use the Vercel CLI to deploy the current repository to the linked Vercel project.
-          # --prod performs a production deployment; --confirm avoids interactive prompts.
-          vercel --prod --confirm
+          # --prod performs a production deployment; --yes avoids interactive prompts.
+          vercel --prod --yes
 
 # Notes:
 # - Before this workflow will run successfully you MUST add a repository secret named VERCEL_TOKEN
